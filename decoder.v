@@ -12,3 +12,4 @@ always @(*) begin
     regsrc2 <= message[5:3];
     regdes <= message[2:0];
 end
+endmodule
