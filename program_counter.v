@@ -1,15 +1,16 @@
-module(
+`default_nettype none
+
+module program_counter(
     input rst_n,
     input clk,
     input inc,
     input load,
-    input reg [15:0] add_in,
+    input [15:0] add_in,
 
     output reg [15:0] add_out
 );
-endmodule
 
-always@(posedge clk or negedge rst_n) begin 
+always @(posedge clk or negedge rst_n) begin 
     if(~rst_n) begin 
         add_out <= 16'b0;
     end else if (inc) begin 
@@ -18,3 +19,4 @@ always@(posedge clk or negedge rst_n) begin
         add_out <= add_in;
     end
 end
+endmodule

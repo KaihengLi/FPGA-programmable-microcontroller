@@ -1,19 +1,29 @@
+`default_nettype none
+
 module alu(
     input clk,
     input rst_n,
     input incoming,
-    input reg [15:0] A, B,
-    input reg [4:0] operator,
+    input [15:0] A, B,
+    input [3:0] operator,
 
     output reg [15:0] Y,
-    output carry,
-    output signov
+    output reg carry,
+    output reg signov,
+    output reg alu_done
+);
 
-)
+    wire c_uadd, v_uadd;
+    wire [15:0] y_uadd;
 
-wire c_addsub;
-wire y_addsub;
-wire v_addsub;
+    wire c_usub, v_usub;
+    wire [15:0] y_usub;
+
+    wire c_sadd, v_sadd;
+    wire [15:0] y_sadd;
+
+    wire c_ssub, v_ssub;
+    wire [15:0] y_ssub;
 
 
 
@@ -41,21 +51,31 @@ addsub s_sub(
 reg [15:0] result;
 
 always @(posedge clk or negedge rst_n) begin 
-    twos <= operator [0]
+    //twos <= operator[0]? 1:0;
     if (~rst_n) begin
         result <= 16'b0;
     end else begin 
-        if (ready)begin
+        if (incoming)begin
             case (operator[4:0])  
-                0000: begin//add
-                    Y = twos? y_sadd : y_uadd;
-                    signov = twos? v_sadd : v_uadd;
-                    carry = twos? c_sadd : c_uadd;
+                0000: begin//add unsigned
+                    Y <= y_uadd;
+                    signov <= v_uadd;
+                    carry <= c_uadd;
                 end
-                0001: begin//subtract
-                    Y = sign? y_ssub : y_usub;
-                    signov = sign? v_ssub : v_usub;
-                    carry = sign? c_ssub : c_usub;
+                0001: begin//subtract unsigned
+                    Y <= y_usub;
+                    signov <= v_usub;
+                    carry <= c_usub;
+                end
+                1011:begin 
+                    Y <= y_sadd;
+                    signov <= v_sadd;
+                    carry <= c_sadd;
+                end
+                1100:begin 
+                    Y <= y_ssub;
+                    signov <= v_ssub;
+                    carry <= c_ssub;
                 end
                 0010: begin //AND
                     result <= A&B;
@@ -84,13 +104,14 @@ always @(posedge clk or negedge rst_n) begin
                     end
                 end
                 1010: begin 
-                    if (A = B) begin 
+                    if (A == B) begin 
                         result <= 16'd1;  
                     end else begin 
                         result <= 16'b0;
                     end
                 end
             endcase
+            alu_done <= 1'b1;
         end
     end
 end

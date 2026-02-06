@@ -1,0 +1,31 @@
+timestamp: "05215513333"
+arch: ICE40
+fpga_info {
+  fpga_id: "ice40lp8k-cm81"
+  part_num: "ICE40LP8K-CM81"
+  size: "8k"
+  ice40 {
+    type: "lp8k"
+    pack: "cm81"
+  }
+}
+verbosity {
+  all: false
+  synth: false
+  pnr: false
+}
+environment {
+  platform_id: "darwin-arm64"
+  is_windows: false
+  terminal_mode: FORCE_TERMINAL
+  theme_name: "light"
+  debug_level: 0
+  yosys_path: "/Users/henryli/.apio/packages/oss-cad-suite/share/yosys"
+  trellis_path: "/Users/henryli/.apio/packages/oss-cad-suite/share/trellis"
+  scons_shell_id: "zsh"
+}
+apio_env_params {
+  env_name: "default"
+  board_id: "tinyfpga-bx"
+  top_module: "top"
+}
